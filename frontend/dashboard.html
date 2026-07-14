@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>X-Port Dashboard</title>
+<!-- Google Fonts: Inter & Geist -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@600&amp;family=Inter:wght@400;500;600;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e4e1e6",
+                      "primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#46464e",
+                      "background": "#131315",
+                      "primary-fixed": "#e2e2e2",
+                      "tertiary-fixed-dim": "#c8c5ca",
+                      "secondary-fixed-dim": "#c6c5cf",
+                      "surface": "#131315",
+                      "on-tertiary-container": "#656467",
+                      "inverse-primary": "#5d5f5f",
+                      "surface-container-highest": "#353437",
+                      "on-background": "#e5e1e4",
+                      "error": "#ffb4ab",
+                      "inverse-surface": "#e5e1e4",
+                      "tertiary": "#ffffff",
+                      "inverse-on-surface": "#313032",
+                      "on-secondary": "#2f3038",
+                      "on-primary-fixed": "#1a1c1c",
+                      "on-surface-variant": "#c4c7c8",
+                      "on-surface": "#e5e1e4",
+                      "outline-variant": "#444748",
+                      "surface-variant": "#353437",
+                      "on-primary-fixed-variant": "#454747",
+                      "surface-container-lowest": "#0e0e10",
+                      "on-error": "#690005",
+                      "outline": "#8e9192",
+                      "primary-container": "#e2e2e2",
+                      "surface-tint": "#c6c6c7",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#4a4b53",
+                      "surface-dim": "#131315",
+                      "secondary-fixed": "#e3e1ec",
+                      "on-tertiary": "#303033",
+                      "on-tertiary-fixed": "#1b1b1e",
+                      "on-primary-container": "#636565",
+                      "secondary": "#c6c5cf",
+                      "surface-bright": "#39393b",
+                      "surface-container-low": "#1c1b1d",
+                      "on-primary": "#2f3131",
+                      "on-secondary-container": "#bcbbc5",
+                      "surface-container-high": "#2a2a2c",
+                      "on-tertiary-fixed-variant": "#47464a",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-secondary-fixed": "#1a1b22",
+                      "tertiary-container": "#e4e1e6",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "xl": "48px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-base": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ],
+                      "headline-xl": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-base": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.03em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for deep dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353437; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444748; 
+        }
+        
+        .glass-card {
+            background: rgba(24, 24, 27, 0.4);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base text-body-base antialiased selection:bg-primary selection:text-on-primary min-h-screen flex">
+<!-- Shared Component: SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container dark:bg-surface-container border-r border-outline-variant flex flex-col py-lg px-md z-20">
+<!-- Header -->
+<div class="mb-xl px-sm">
+<h1 class="font-headline-lg text-headline-lg font-black tracking-tighter text-primary">X-Port</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Global Secure Hub</p>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-sm">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-md px-md py-sm bg-primary text-on-primary rounded-xl font-bold transition-transform duration-100 hover:scale-[0.98]" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="/nodes">
+<span class="material-symbols-outlined">dns</span>
+<span>Nodes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="/ports">
+<span class="material-symbols-outlined">settings_input_component</span>
+<span>Ports Manager</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="/settings">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Footer Tab -->
+<div class="pt-lg border-t border-outline-variant/30 mt-auto">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined">swap_vertical_circle</span>
+<span>Traffic Status</span>
+</a>
+</div>
+</aside>
+<!-- Shared Component: TopAppBar -->
+<header class="fixed top-0 right-0 left-64 z-10 bg-background/80 backdrop-blur-xl border-b border-outline-variant/30 flex items-center justify-between px-lg h-16">
+<!-- Left Side / Brand (Hidden per JSON) -->
+<div class="hidden font-title-md text-title-md text-primary">
+            X-Port
+        </div>
+<!-- Right Side / Search & Actions -->
+<div class="flex items-center justify-end w-full gap-lg">
+<!-- Search Bar -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-transparent border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-on-surface font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant" placeholder="Search resources..." type="text"/>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-xl flex-1 max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<header class="mb-xl">
+<h2 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">Overview</h2>
+</header>
+<!-- Metrics Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-lg mb-xl">
+<!-- Metric 1 -->
+<div class="glass-card border border-outline-variant hover:border-outline transition-colors duration-300 rounded-xl p-lg flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex items-center justify-between relative z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Total Active Ports</span>
+<span class="material-symbols-outlined text-primary text-[18px]">hub</span>
+</div>
+<div class="relative z-10 flex items-baseline gap-sm">
+<span id="active-ports-val" class="font-headline-lg text-headline-lg text-primary font-bold">1,204</span>
+<span class="flex items-center text-primary/80 font-body-sm text-body-sm">
+<div class="w-1.5 h-1.5 rounded-full bg-[#0070F3] mr-1.5 animate-pulse"></div>
+                        Live
+                    </span>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="glass-card border border-outline-variant hover:border-outline transition-colors duration-300 rounded-xl p-lg flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex items-center justify-between relative z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Total Download</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">download</span>
+</div>
+<div class="relative z-10">
+<span id="total-down-val" class="font-headline-lg text-headline-lg text-primary font-bold">1.2 <span class="font-title-md text-title-md text-on-surface-variant font-medium">GB/s</span></span>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="glass-card border border-outline-variant hover:border-outline transition-colors duration-300 rounded-xl p-lg flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex items-center justify-between relative z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Total Upload</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">upload</span>
+</div>
+<div class="relative z-10">
+<span id="total-up-val" class="font-headline-lg text-headline-lg text-primary font-bold">450 <span class="font-title-md text-title-md text-on-surface-variant font-medium">MB/s</span></span>
+</div>
+</div>
+</section>
+<!-- Main Chart Section -->
+<section class="glass-card border border-outline-variant rounded-xl p-lg mb-xl">
+<div class="flex items-center justify-between mb-lg border-b border-outline-variant/30 pb-md">
+<h3 class="font-title-md text-title-md text-primary font-medium">Network Traffic</h3>
+<div class="flex gap-sm">
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary px-3 py-1 rounded-md hover:bg-surface-variant transition-colors">1H</button>
+<button class="font-label-caps text-label-caps text-primary bg-surface-variant px-3 py-1 rounded-md">24H</button>
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary px-3 py-1 rounded-md hover:bg-surface-variant transition-colors">7D</button>
+</div>
+</div>
+<div class="w-full h-64 relative mt-md">
+<!-- SVG Area Chart Mock -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<!-- Grid Lines -->
+<line stroke="#353437" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#353437" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#353437" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<!-- Defs for Gradient -->
+<defs>
+<lineargradient id="trafficGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area Fill -->
+<path id="chart-area" d="M0,200 L800,200 Z" fill="url(#trafficGradient)"></path>
+<!-- Line Path -->
+<path id="chart-line" class="drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" d="M0,200 L800,200" fill="none" stroke="#ffffff" stroke-width="2"></path>
+<!-- Active Point Indicator -->
+<circle id="chart-point" cx="800" cy="200" fill="#ffffff" r="4" stroke="#131315" stroke-width="2"></circle>
+<line stroke="#ffffff" stroke-dasharray="2" stroke-opacity="0.3" stroke-width="1" x1="500" x2="500" y1="120" y2="200"></line>
+</svg>
+</div>
+</section>
+<!-- Quick Actions Row -->
+<section>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-md pl-xs">Quick Actions</h3>
+<div class="flex gap-md">
+<!-- Primary Button -->
+<button id="btn-test-all" class="bg-primary text-[#000000] font-body-sm text-body-sm font-semibold px-6 py-2.5 rounded-lg hover:bg-opacity-90 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">science</span>
+                    Test All Nodes
+                </button>
+<!-- Secondary Buttons -->
+<button id="btn-restart-core" class="bg-transparent border border-outline text-primary font-body-sm text-body-sm font-medium px-6 py-2.5 rounded-lg hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+                    Restart Core
+                </button>
+<button id="btn-export-logs" class="bg-transparent border border-outline text-primary font-body-sm text-body-sm font-medium px-6 py-2.5 rounded-lg hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">description</span>
+                    Export Logs
+                </button>
+</div>
+</section>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadStats();
+    
+    document.getElementById("btn-restart-core").addEventListener("click", async (e) => {
+        const btn = e.target.closest("button");
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">hourglass_empty</span> Restarting...';
+        btn.disabled = true;
+        try {
+            await fetch("/api/core/restart", { method: "POST" });
+        } catch(err) { console.error(err); }
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">restart_alt</span> Restart Core';
+        btn.disabled = false;
+    });
+
+    document.getElementById("btn-test-all").addEventListener("click", async (e) => {
+        const btn = e.target.closest("button");
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">hourglass_empty</span> Testing...';
+        try {
+            const nodes = await (await fetch("/api/nodes/")).json();
+            for (const n of nodes) {
+                await fetch(`/api/nodes/${n.id}/test`, { method: "POST" });
+            }
+            alert("All nodes tested.");
+        } catch(err) { console.error(err); }
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">science</span> Test All Nodes';
+    });
+
+    document.getElementById("btn-export-logs").addEventListener("click", () => {
+        alert("Logs export requested (to be implemented on backend API)");
+    });
+
+    setInterval(loadStats, 2000);
+});
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 <span class="font-title-md text-title-md text-on-surface-variant font-medium">B</span>';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' <span class="font-title-md text-title-md text-on-surface-variant font-medium">' + sizes[i] + '</span>';
+}
+
+function updateGraph(history) {
+    if (!history || history.length === 0) return;
+    
+    // Max value in history or 1MB/s minimum scale
+    const maxVal = Math.max(...history.map(d => d.down + d.up), 1024 * 1024);
+    
+    const width = 800;
+    const height = 150; // 50 to 200
+    const step = history.length > 1 ? width / (history.length - 1) : width;
+    
+    let pathD = `M0,200 `;
+    let pts = [];
+    
+    for (let i = 0; i < history.length; i++) {
+        const val = history[i].down + history[i].up;
+        const x = i * step;
+        const y = 200 - ((val / maxVal) * height);
+        pts.push(`${x},${y}`);
+    }
+    
+    const lineStr = "M" + pts.join(" L");
+    const areaStr = lineStr + ` L${width},200 L0,200 Z`;
+    
+    document.getElementById("chart-line").setAttribute("d", lineStr);
+    document.getElementById("chart-area").setAttribute("d", areaStr);
+    
+    if (pts.length > 0) {
+        const lastPt = pts[pts.length - 1].split(",");
+        document.getElementById("chart-point").setAttribute("cx", lastPt[0]);
+        document.getElementById("chart-point").setAttribute("cy", lastPt[1]);
+    }
+}
+
+async function loadStats() {
+    try {
+        const res = await fetch("/api/stats");
+        const data = await res.json();
+        
+        document.getElementById("active-ports-val").innerText = data.active_ports;
+        document.getElementById("total-down-val").innerHTML = formatBytes(data.total_download_bytes);
+        document.getElementById("total-up-val").innerHTML = formatBytes(data.total_upload_bytes);
+        
+        updateGraph(data.traffic_history);
+    } catch(err) {
+        console.error("Failed to load stats:", err);
+    }
+}
+</script>
+</body></html>

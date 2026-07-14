@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>X-Port - Ports Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e4e1e6",
+                      "primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#46464e",
+                      "background": "#131315",
+                      "primary-fixed": "#e2e2e2",
+                      "tertiary-fixed-dim": "#c8c5ca",
+                      "secondary-fixed-dim": "#c6c5cf",
+                      "surface": "#131315",
+                      "on-tertiary-container": "#656467",
+                      "inverse-primary": "#5d5f5f",
+                      "surface-container-highest": "#353437",
+                      "on-background": "#e5e1e4",
+                      "error": "#ffb4ab",
+                      "inverse-surface": "#e5e1e4",
+                      "tertiary": "#ffffff",
+                      "inverse-on-surface": "#313032",
+                      "on-secondary": "#2f3038",
+                      "on-primary-fixed": "#1a1c1c",
+                      "on-surface-variant": "#c4c7c8",
+                      "on-surface": "#e5e1e4",
+                      "outline-variant": "#444748",
+                      "surface-variant": "#353437",
+                      "on-primary-fixed-variant": "#454747",
+                      "surface-container-lowest": "#0e0e10",
+                      "on-error": "#690005",
+                      "outline": "#8e9192",
+                      "primary-container": "#e2e2e2",
+                      "surface-tint": "#c6c6c7",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#4a4b53",
+                      "surface-dim": "#131315",
+                      "secondary-fixed": "#e3e1ec",
+                      "on-tertiary": "#303033",
+                      "on-tertiary-fixed": "#1b1b1e",
+                      "on-primary-container": "#636565",
+                      "secondary": "#c6c5cf",
+                      "surface-bright": "#39393b",
+                      "surface-container-low": "#1c1b1d",
+                      "on-primary": "#2f3131",
+                      "on-secondary-container": "#bcbbc5",
+                      "surface-container-high": "#2a2a2c",
+                      "on-tertiary-fixed-variant": "#47464a",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-secondary-fixed": "#1a1b22",
+                      "tertiary-container": "#e4e1e6",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "xl": "48px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "body-base": ["Inter"],
+                      "title-md": ["Inter"],
+                      "label-caps": ["Geist"],
+                      "headline-xl": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-base": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "title-md": ["18px", {"lineHeight": "1.5", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-xl": ["40px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "600"}],
+                      "body-sm": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-surface-container-low/50 backdrop-blur-xl border border-surface-container-highest;
+            }
+            .card-hover {
+                @apply hover:border-outline-variant transition-colors duration-300;
+            }
+            .input-minimal {
+                @apply bg-transparent border border-surface-container-highest rounded-DEFAULT px-md py-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base min-h-screen flex selection:bg-primary selection:text-on-primary">
+<!-- SideNavBar -->
+<nav class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-surface-container dark:bg-surface-container border-r border-outline-variant flex-col py-lg px-md z-20">
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg font-black tracking-tighter text-primary">X-Port</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Global Secure Hub</p>
+</div>
+<div class="flex-1 flex flex-col gap-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-title-md text-title-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/nodes">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dns</span>
+<span class="font-title-md text-title-md">Nodes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-xl bg-primary text-on-primary font-bold scale-95 duration-100" href="/ports">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings_input_component</span>
+<span class="font-title-md text-title-md">Ports Manager</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/settings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-title-md text-title-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto">
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">swap_vertical_circle</span>
+<span class="font-title-md text-title-md">Traffic Status</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="hidden md:flex fixed top-0 right-0 left-64 z-10 bg-background/80 backdrop-blur-xl border-b border-outline-variant/30 items-center justify-between px-lg h-16">
+<div class="hidden font-headline-lg text-headline-lg font-black tracking-tighter text-primary">X-Port</div>
+<div class="flex-1 flex justify-end mr-md">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input id="search-input" class="w-full bg-transparent border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-on-surface font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant" placeholder="Search ports..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md text-primary font-title-md text-title-md">
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 pt-16 md:pt-24 p-md md:p-xl flex flex-col gap-xl max-w-container-max mx-auto w-full">
+<header class="mb-lg">
+<h2 class="font-headline-xl text-headline-xl text-primary">Ports Manager</h2>
+<p class="text-on-surface-variant font-body-base text-body-base mt-xs">Configure and monitor active proxy tunnels.</p>
+</header>
+<!-- Create New Port Card -->
+<section class="glass-panel rounded-xl p-lg card-hover">
+<h3 class="font-title-md text-title-md text-primary mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-outline">add_circle</span>
+                Create New Port
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg items-end">
+<!-- Protocol -->
+<div class="md:col-span-2 flex flex-col gap-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Protocol</label>
+<div class="flex bg-surface-container-highest rounded-DEFAULT p-xs">
+<button id="proto-http" data-val="http" class="flex-1 bg-surface text-primary rounded-sm py-xs font-body-sm text-body-sm text-center shadow-sm">HTTP</button>
+<button id="proto-socks" data-val="socks" class="flex-1 text-on-surface-variant hover:text-primary rounded-sm py-xs font-body-sm text-body-sm text-center transition-colors">SOCKS5</button>
+</div>
+<input type="hidden" id="new-protocol" value="http">
+</div>
+<!-- Local Port -->
+<div class="md:col-span-3 flex flex-col gap-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Local Port</label>
+<div class="flex relative">
+<span class="absolute left-md top-1/2 -translate-y-1/2 text-outline">:</span>
+<input id="new-local-port" class="input-minimal w-full pl-xl pr-12 font-mono" type="number" value="8080"/>
+<button id="btn-auto-port" class="absolute right-sm top-1/2 -translate-y-1/2 text-xs font-label-caps text-on-surface-variant hover:text-primary bg-surface-container px-2 py-1 rounded">AUTO</button>
+</div>
+</div>
+<!-- Bind Address -->
+<div class="md:col-span-3 flex flex-col gap-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Bind Address</label>
+<select class="input-minimal w-full appearance-none">
+<option value="127.0.0.1">127.0.0.1 (Localhost)</option>
+<option value="0.0.0.0">0.0.0.0 (All Interfaces)</option>
+</select>
+</div>
+<!-- Node Selector -->
+<div class="md:col-span-3 flex flex-col gap-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Target Node</label>
+<select id="new-node" class="input-minimal w-full appearance-none">
+<!-- Nodes dynamically loaded here -->
+</select>
+</div>
+<!-- Action -->
+<div class="md:col-span-1 flex justify-end">
+<button id="btn-create-port" class="bg-primary text-on-primary font-title-md text-title-md px-md py-sm rounded-DEFAULT hover:bg-primary-fixed transition-colors h-[42px] w-full md:w-auto flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Active Ports Grid -->
+<section>
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-title-md text-title-md text-primary flex items-center gap-sm">
+<span class="material-symbols-outlined text-outline">hub</span>
+                    Active Ports
+                </h3>
+<span id="running-count" class="font-label-caps text-label-caps bg-surface-container-highest px-2 py-1 rounded-sm text-on-surface-variant">0 RUNNING</span>
+</div>
+<div id="ports-list-body" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Cards dynamically injected here -->
+</div>
+</section>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadNodes();
+    loadPorts();
+    
+    // Protocol toggle
+    document.getElementById("proto-http").addEventListener("click", (e) => setProtocol(e, 'http'));
+    document.getElementById("proto-socks").addEventListener("click", (e) => setProtocol(e, 'socks'));
+    
+    // Auto Port
+    document.getElementById("btn-auto-port").addEventListener("click", () => {
+        document.getElementById("new-local-port").value = Math.floor(Math.random() * (65000 - 1024 + 1)) + 1024;
+    });
+
+    // Create Port
+    document.getElementById("btn-create-port").addEventListener("click", createPort);
+
+    // Search filter
+    document.getElementById("search-input").addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll("#ports-list-body > div");
+        cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(query) ? "" : "none";
+        });
+    });
+});
+
+function setProtocol(e, type) {
+    const httpBtn = document.getElementById("proto-http");
+    const socksBtn = document.getElementById("proto-socks");
+    const valInput = document.getElementById("new-protocol");
+    
+    valInput.value = type;
+    
+    const activeClass = "flex-1 bg-surface text-primary rounded-sm py-xs font-body-sm text-body-sm text-center shadow-sm";
+    const inactiveClass = "flex-1 text-on-surface-variant hover:text-primary rounded-sm py-xs font-body-sm text-body-sm text-center transition-colors";
+    
+    if (type === 'http') {
+        httpBtn.className = activeClass;
+        socksBtn.className = inactiveClass;
+    } else {
+        socksBtn.className = activeClass;
+        httpBtn.className = inactiveClass;
+    }
+}
+
+// Keep a map of nodes to display names easily
+let nodesMap = {};
+
+async function loadNodes() {
+    try {
+        const res = await fetch("/api/nodes/");
+        const nodes = await res.json();
+        const select = document.getElementById("new-node");
+        select.innerHTML = "";
+        
+        nodes.forEach(n => {
+            nodesMap[n.id] = n;
+            const opt = document.createElement("option");
+            opt.value = n.id;
+            opt.innerText = n.name;
+            select.appendChild(opt);
+        });
+    } catch(err) { console.error("Load nodes error:", err); }
+}
+
+async function loadPorts() {
+    try {
+        const res = await fetch("/api/ports/");
+        const ports = await res.json();
+        
+        const container = document.getElementById("ports-list-body");
+        container.innerHTML = "";
+        
+        const runningCount = ports.filter(p => p.status === 'running').length;
+        document.getElementById("running-count").innerText = `${runningCount} RUNNING`;
+
+        ports.forEach(p => {
+            const isRunning = p.status === 'running';
+            const nodeName = nodesMap[p.node_id] ? nodesMap[p.node_id].name : `Node #${p.node_id}`;
+            const icon = p.protocol === 'http' ? 'language' : 'public';
+            
+            let statusBadge = isRunning 
+                ? `<span class="font-label-caps text-label-caps text-primary bg-primary/10 px-2 py-0.5 rounded flex items-center gap-1">
+                     <div class="w-1.5 h-1.5 rounded-full bg-[#0070F3]"></div>ACTIVE
+                   </span>`
+                : `<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-0.5 rounded flex items-center gap-1">
+                     <div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>STOPPED
+                   </span>`;
+            
+            let toggleBtn = isRunning
+                ? `<button onclick="togglePort(${p.id})" class="w-10 h-5 bg-primary rounded-full relative transition-colors focus:outline-none">
+                     <div class="absolute right-1 top-1 w-3 h-3 bg-on-primary rounded-full transition-transform"></div>
+                   </button>`
+                : `<button onclick="togglePort(${p.id})" class="w-10 h-5 bg-surface-container-highest rounded-full relative transition-colors focus:outline-none border border-outline-variant">
+                     <div class="absolute left-1 top-1 w-3 h-3 bg-outline rounded-full transition-transform"></div>
+                   </button>`;
+            
+            let cardClasses = isRunning 
+                ? "bg-surface-container-low border border-surface-container-highest rounded-xl p-md card-hover flex flex-col gap-md relative overflow-hidden group"
+                : "bg-surface-container-lowest border border-surface-container-highest rounded-xl p-md card-hover flex flex-col gap-md relative overflow-hidden opacity-70 hover:opacity-100 transition-opacity";
+
+            const div = document.createElement("div");
+            div.className = cardClasses;
+            div.innerHTML = `
+                <div class="absolute top-0 right-0 p-md opacity-20 group-hover:opacity-40 transition-opacity">
+                    <span class="material-symbols-outlined text-4xl">${icon}</span>
+                </div>
+                <div class="flex justify-between items-start z-10">
+                    <div>
+                        <div class="font-headline-lg text-headline-lg text-${isRunning?'primary':'on-surface-variant'} font-mono tracking-tight">:${p.local_port}</div>
+                        <div class="flex gap-sm mt-xs">
+                            <span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-0.5 rounded uppercase">${p.protocol}</span>
+                            ${statusBadge}
+                        </div>
+                    </div>
+                    ${toggleBtn}
+                </div>
+                <div class="mt-auto pt-md border-t border-surface-container-highest z-10 flex justify-between items-center">
+                    <div>
+                        <div class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-xs">Target Node</div>
+                        <div class="font-body-base text-body-base text-${isRunning?'on-surface':'on-surface-variant'} flex items-center gap-sm">
+                            <span class="material-symbols-outlined text-sm text-${isRunning?'outline':'outline-variant'}">dns</span>
+                            ${nodeName}
+                        </div>
+                    </div>
+                    <button onclick="deletePort(${p.id})" class="text-error hover:text-error/80"><span class="material-symbols-outlined text-lg">delete</span></button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    } catch(err) { console.error("Load ports error:", err); }
+}
+
+async function createPort() {
+    const payload = {
+        local_port: parseInt(document.getElementById("new-local-port").value, 10),
+        protocol: document.getElementById("new-protocol").value,
+        node_id: parseInt(document.getElementById("new-node").value, 10),
+        auto_assign: false,
+        status: "stopped"
+    };
+
+    try {
+        const res = await fetch("/api/ports/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail);
+        }
+        loadPorts();
+    } catch(err) {
+        alert("Failed to create port: " + err.message);
+    }
+}
+
+async function togglePort(id) {
+    try {
+        const res = await fetch(`/api/ports/${id}/toggle`, { method: "PUT" });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail);
+        }
+        loadPorts();
+    } catch(err) {
+        alert("Failed to toggle: " + err.message);
+    }
+}
+
+async function deletePort(id) {
+    if(!confirm("Delete this port?")) return;
+    try {
+        await fetch(`/api/ports/${id}`, { method: "DELETE" });
+        loadPorts();
+    } catch(err) { console.error(err); }
+}
+</script>
+</body></html>

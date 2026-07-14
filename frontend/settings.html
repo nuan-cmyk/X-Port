@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>X-Port - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e4e1e6",
+                      "primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#46464e",
+                      "background": "#131315",
+                      "primary-fixed": "#e2e2e2",
+                      "tertiary-fixed-dim": "#c8c5ca",
+                      "secondary-fixed-dim": "#c6c5cf",
+                      "surface": "#131315",
+                      "on-tertiary-container": "#656467",
+                      "inverse-primary": "#5d5f5f",
+                      "surface-container-highest": "#353437",
+                      "on-background": "#e5e1e4",
+                      "error": "#ffb4ab",
+                      "inverse-surface": "#e5e1e4",
+                      "tertiary": "#ffffff",
+                      "inverse-on-surface": "#313032",
+                      "on-secondary": "#2f3038",
+                      "on-primary-fixed": "#1a1c1c",
+                      "on-surface-variant": "#c4c7c8",
+                      "on-surface": "#e5e1e4",
+                      "outline-variant": "#444748",
+                      "surface-variant": "#353437",
+                      "on-primary-fixed-variant": "#454747",
+                      "surface-container-lowest": "#0e0e10",
+                      "on-error": "#690005",
+                      "outline": "#8e9192",
+                      "primary-container": "#e2e2e2",
+                      "surface-tint": "#c6c6c7",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#4a4b53",
+                      "surface-dim": "#131315",
+                      "secondary-fixed": "#e3e1ec",
+                      "on-tertiary": "#303033",
+                      "on-tertiary-fixed": "#1b1b1e",
+                      "on-primary-container": "#636565",
+                      "secondary": "#c6c5cf",
+                      "surface-bright": "#39393b",
+                      "surface-container-low": "#1c1b1d",
+                      "on-primary": "#2f3131",
+                      "on-secondary-container": "#bcbbc5",
+                      "surface-container-high": "#2a2a2c",
+                      "on-tertiary-fixed-variant": "#47464a",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-secondary-fixed": "#1a1b22",
+                      "tertiary-container": "#e4e1e6",
+                      "error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "xl": "48px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "unit": "4px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "body-base": ["Inter"],
+                      "title-md": ["Inter"],
+                      "label-caps": ["Geist"],
+                      "headline-xl": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-base": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "title-md": ["18px", {"lineHeight": "1.5", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-xl": ["40px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "600"}],
+                      "body-sm": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #09090B;
+            color: #e5e1e4;
+        }
+        /* Custom toggle styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ffffff;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ffffff;
+        }
+        .toggle-checkbox:checked + .toggle-label:before {
+            transform: translateX(100%);
+            background-color: #09090B;
+        }
+        .toggle-label {
+            width: 36px;
+            height: 20px;
+            background-color: #27272A;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .toggle-label:before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        /* Input focus styles matching guidance */
+        input:focus, select:focus {
+            border-color: #ffffff !important;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+            outline: none !important;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Desktop) -->
+<nav class="fixed left-0 top-0 h-screen w-64 bg-surface-container dark:bg-surface-container text-primary font-body-base text-body-base border-r border-outline-variant hidden md:flex flex-col py-lg px-md z-20">
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg font-black tracking-tighter text-primary">X-Port</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Global Secure Hub</p>
+</div>
+<div class="flex-1 space-y-unit">
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/nodes">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dns</span>
+<span>Nodes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/ports">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings_input_component</span>
+<span>Ports Manager</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm bg-primary text-on-primary rounded-xl font-bold active:scale-95 duration-100" href="/settings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="mt-auto border-t border-outline-variant/30 pt-md">
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">swap_vertical_circle</span>
+<span>Traffic Status</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-10 bg-background/80 backdrop-blur-xl text-primary font-title-md text-title-md border-b border-outline-variant/30 flex items-center justify-between px-lg h-16">
+<div class="md:hidden font-headline-lg-mobile text-headline-lg-mobile font-black tracking-tighter">X-Port</div>
+<div class="hidden md:block">Settings</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full pt-16 md:pl-64 flex justify-center">
+<div class="w-full max-w-container-max p-md md:p-xl mt-lg">
+<div class="mb-xl">
+<h2 class="font-headline-xl text-headline-xl text-primary mb-xs">Core Configuration</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">Manage your routing engine paths and advanced operational parameters.</p>
+</div>
+<!-- Settings Form Card (Level 1 Elevation) -->
+<div class="bg-[#18181B] border border-[#27272A] rounded-xl p-lg md:p-xl shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+<form class="space-y-xl">
+<!-- Xray Core Path -->
+<div class="space-y-sm">
+<label class="block font-label-caps text-label-caps text-on-surface uppercase" for="corePath">Xray Core Path</label>
+<input class="w-full bg-transparent border border-[#27272A] rounded-md px-md py-sm text-primary font-body-base text-body-base focus:border-primary focus:ring-0 transition-colors duration-200" id="corePath" name="corePath" type="text" value="/usr/local/bin/xray"/>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Absolute path to the executable binary.</p>
+</div>
+<hr class="border-[#27272A]"/>
+<!-- Routing Strategy -->
+<div class="space-y-sm">
+<label class="block font-label-caps text-label-caps text-on-surface uppercase" for="routing">Routing Strategy</label>
+<div class="relative">
+<select class="w-full bg-[#18181B] border border-[#27272A] rounded-md px-md py-sm text-primary font-body-base text-body-base appearance-none focus:border-primary focus:ring-0 transition-colors duration-200" id="routing" name="routing">
+<option value="global">Global</option>
+<option selected="" value="bypass_lan">Bypass LAN</option>
+<option value="custom">Custom</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Determines how outbound traffic is directed by default.</p>
+</div>
+<hr class="border-[#27272A]"/>
+<!-- Enable Sniffing -->
+<div class="flex items-center justify-between">
+<div class="space-y-xs">
+<label class="block font-title-md text-title-md text-primary">Enable Sniffing</label>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Extract domain names from traffic to improve routing accuracy.</p>
+</div>
+<div class="relative inline-block w-[36px] align-middle select-none">
+<input checked="" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-4 appearance-none cursor-pointer opacity-0 z-10" id="sniffingToggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-[20px] rounded-full bg-primary cursor-pointer" for="sniffingToggle"></label>
+</div>
+</div>
+<div class="pt-lg">
+<button id="saveBtn" class="bg-primary text-[#09090B] font-body-base text-body-base font-bold py-sm px-lg rounded-md hover:bg-surface-tint transition-colors duration-200" type="button">
+                            Save Configuration
+                        </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container border-t border-outline-variant/30 flex justify-around items-center h-16 z-20 pb-safe">
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/nodes">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dns</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant" href="/ports">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings_input_component</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="/settings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="w-1 h-1 bg-primary rounded-full mt-1"></span>
+</a>
+</nav>
+<script>
+        // Simple toggle logic for visual feedback
+        const toggleInput = document.getElementById('sniffingToggle');
+        const toggleLabel = document.querySelector('.toggle-label');
+        
+        function updateToggleColor() {
+            if(toggleInput.checked) {
+                toggleLabel.style.backgroundColor = '#ffffff';
+            } else {
+                toggleLabel.style.backgroundColor = '#27272A';
+            }
+        }
+        
+        toggleInput.addEventListener('change', updateToggleColor);
+        
+        // Initial state
+        updateToggleColor();
+
+        // --- API INTEGRATION ---
+        document.addEventListener("DOMContentLoaded", () => {
+            loadSettings();
+            document.getElementById("saveBtn").addEventListener("click", saveSettings);
+        });
+
+        async function loadSettings() {
+            try {
+                const response = await fetch("/api/settings/");
+                if (!response.ok) throw new Error("Failed to fetch settings");
+                
+                const settings = await response.json();
+                
+                document.getElementById("corePath").value = settings.xray_path || "";
+                document.getElementById("routing").value = settings.routing_mode || "global";
+                document.getElementById("sniffingToggle").checked = settings.enable_sniffing;
+                updateToggleColor();
+                
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            const btn = document.getElementById("saveBtn");
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            const payload = {
+                xray_path: document.getElementById("corePath").value,
+                routing_mode: document.getElementById("routing").value,
+                enable_sniffing: document.getElementById("sniffingToggle").checked,
+            };
+
+            try {
+                const response = await fetch("/api/settings/", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error("Failed to save");
+                btn.innerText = "Saved!";
+            } catch (err) {
+                console.error(err);
+                btn.innerText = "Error!";
+            }
+            setTimeout(() => { btn.innerText = "Save Configuration"; btn.disabled = false; }, 2000);
+        }
+    </script>
+</body></html>

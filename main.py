@@ -269,7 +269,7 @@ async def restart_core(db: Session = Depends(get_db)):
 
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 _PROJECT_ROOT = os.path.abspath(os.path.join(_BASE_DIR, ".."))
-_FRONTEND_DIR = os.path.join(_PROJECT_ROOT, "frontend")
+_FRONTEND_DIR = os.path.join(_BASE_DIR, "frontend")
 
 # Mount directory for static assets (images, external CSS/JS if any)
 if os.path.isdir(_FRONTEND_DIR):

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nodes &amp; Subscriptions - X-Port</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#e4e1e6",
+                        "primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#46464e",
+                        "background": "#131315",
+                        "primary-fixed": "#e2e2e2",
+                        "tertiary-fixed-dim": "#c8c5ca",
+                        "secondary-fixed-dim": "#c6c5cf",
+                        "surface": "#131315",
+                        "on-tertiary-container": "#656467",
+                        "inverse-primary": "#5d5f5f",
+                        "surface-container-highest": "#353437",
+                        "on-background": "#e5e1e4",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#e5e1e4",
+                        "tertiary": "#ffffff",
+                        "inverse-on-surface": "#313032",
+                        "on-secondary": "#2f3038",
+                        "on-primary-fixed": "#1a1c1c",
+                        "on-surface-variant": "#c4c7c8",
+                        "on-surface": "#e5e1e4",
+                        "outline-variant": "#444748",
+                        "surface-variant": "#353437",
+                        "on-primary-fixed-variant": "#454747",
+                        "surface-container-lowest": "#0e0e10",
+                        "on-error": "#690005",
+                        "outline": "#8e9192",
+                        "primary-container": "#e2e2e2",
+                        "surface-tint": "#c6c6c7",
+                        "surface-container": "#201f22",
+                        "secondary-container": "#4a4b53",
+                        "surface-dim": "#131315",
+                        "secondary-fixed": "#e3e1ec",
+                        "on-tertiary": "#303033",
+                        "on-tertiary-fixed": "#1b1b1e",
+                        "on-primary-container": "#636565",
+                        "secondary": "#c6c5cf",
+                        "surface-bright": "#39393b",
+                        "surface-container-low": "#1c1b1d",
+                        "on-primary": "#2f3131",
+                        "on-secondary-container": "#bcbbc5",
+                        "surface-container-high": "#2a2a2c",
+                        "on-tertiary-fixed-variant": "#47464a",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-secondary-fixed": "#1a1b22",
+                        "tertiary-container": "#e4e1e6",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "xl": "48px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-base": ["Inter"],
+                        "title-md": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "headline-xl": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-base": ["14px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "title-md": ["18px", { "lineHeight": "1.5", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "label-caps": ["11px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-xl": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #09090B; color: #e5e1e4; }
+        .glass-panel { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #27272A; }
+        .input-glow:focus-within { border-color: #ffffff; box-shadow: 0 0 0 2px rgba(255,255,255,0.1); }
+        .node-row { border-bottom: 1px solid rgba(39, 39, 42, 0.5); }
+        .node-row:last-child { border-bottom: none; }
+    </style>
+</head>
+<body class="font-body-base text-body-base antialiased flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-lg px-md bg-surface-container dark:bg-surface-container text-primary fixed left-0 top-0 h-screen w-64 border-r border-outline-variant z-20">
+<div class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg font-black tracking-tighter text-primary">X-Port</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Global Secure Hub</p>
+</div>
+<ul class="flex flex-col gap-sm flex-grow">
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm bg-primary text-on-primary rounded-xl font-bold transition-colors duration-200" href="/nodes">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dns</span>
+<span>Nodes</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/ports">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings_input_component</span>
+<span>Ports Manager</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="/settings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span>Settings</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto pt-lg border-t border-outline-variant">
+<a class="flex items-center gap-md px-md py-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">swap_vertical_circle</span>
+<span>Traffic Status</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 md:ml-64 min-h-screen flex flex-col relative">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-lg h-16 bg-background/80 backdrop-blur-xl text-primary font-title-md text-title-md fixed top-0 right-0 left-0 md:left-64 z-10 border-b border-outline-variant/30">
+<div class="font-bold text-primary flex items-center gap-sm">
+                Nodes
+            </div>
+<div class="flex items-center gap-lg w-full max-w-md justify-end">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input id="search-input" class="w-full bg-transparent border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-on-surface font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant" placeholder="Search nodes..." type="text"/>
+</div>
+<div class="flex items-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-primary transition-all hover:opacity-80">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 pt-24 px-md md:px-xl pb-xl max-w-container-max mx-auto w-full">
+<div class="mb-xl">
+<h2 class="font-headline-xl text-headline-xl text-primary mb-sm">Nodes &amp; Subscriptions</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">Manage your external connections and proxy nodes.</p>
+</div>
+<!-- Import Section -->
+<section class="glass-panel rounded-xl p-md md:p-lg mb-xl">
+<div class="flex flex-col md:flex-row gap-md items-end">
+<div class="flex-1 w-full">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-sm uppercase" for="import-url">Import Source</label>
+<div class="input-glow flex items-center bg-transparent border border-[#27272A] rounded-lg px-md h-12 transition-all duration-200">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm">link</span>
+<input class="bg-transparent border-none w-full text-primary placeholder-on-surface-variant/50 focus:ring-0 p-0 font-body-base text-body-base" id="import-url" placeholder="Paste vless:// link or Subscription URL" type="text"/>
+</div>
+</div>
+<button id="btn-import" class="h-12 px-lg bg-primary text-background font-bold rounded-lg hover:bg-primary-fixed transition-colors whitespace-nowrap">
+                        Import
+                    </button>
+</div>
+</section>
+<!-- Nodes List -->
+<section class="glass-panel rounded-xl overflow-hidden">
+<div class="px-lg py-md border-b border-[#27272A] bg-surface-container-low/50">
+<h3 class="font-title-md text-title-md text-primary">Imported Nodes</h3>
+</div>
+<div class="flex flex-col">
+<!-- Table Header -->
+<div class="hidden md:grid grid-cols-12 gap-md px-lg py-sm font-label-caps text-label-caps text-on-surface-variant uppercase border-b border-[#27272A]">
+<div class="col-span-5">Node Name</div>
+<div class="col-span-3">Type</div>
+<div class="col-span-2">Latency</div>
+<div class="col-span-2 text-right">Actions</div>
+</div>
+<!-- Dynamic Nodes will be injected here -->
+<div id="nodes-list-body"></div>
+</div>
+</section>
+</main>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    loadNodes();
+    document.getElementById("btn-import").addEventListener("click", importSubscription);
+
+    document.getElementById("search-input").addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll("#nodes-list-body > .node-row");
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(query) ? "" : "none";
+        });
+    });
+  });
+
+  async function loadNodes() {
+    try {
+      const response = await fetch("/api/nodes/");
+      const nodes = await response.json();
+      
+      const tbody = document.getElementById("nodes-list-body");
+      tbody.innerHTML = ""; // Clear existing rows
+
+      nodes.forEach(node => {
+        let latencyHTML = `<div class="w-2 h-2 rounded-full bg-outline"></div><span class="font-body-sm text-body-sm text-on-surface-variant">Untested</span>`;
+        if (node.latency !== null) {
+          const colorClass = node.latency < 100 ? "bg-[#0070F3]" : "bg-error";
+          const textClass = node.latency < 100 ? "text-primary" : "text-on-surface-variant";
+          latencyHTML = `<div class="w-2 h-2 rounded-full ${colorClass}"></div><span class="font-body-sm text-body-sm ${textClass}">${node.latency}ms</span>`;
+        }
+
+        const div = document.createElement("div");
+        div.className = "node-row grid grid-cols-1 md:grid-cols-12 gap-md px-lg py-md items-center hover:bg-surface-variant/30 transition-colors border-b border-[#27272A]/30";
+        div.innerHTML = `
+          <div class="col-span-1 md:col-span-5 flex items-center gap-md">
+            <span class="material-symbols-outlined text-outline">language</span>
+            <span class="font-body-base text-body-base text-primary font-medium">${node.name}</span>
+          </div>
+          <div class="col-span-1 md:col-span-3 text-on-surface-variant font-body-sm text-body-sm uppercase">
+            ${node.protocol}
+          </div>
+          <div class="col-span-1 md:col-span-2 flex items-center gap-sm" id="latency-cell-${node.id}">
+            ${latencyHTML}
+          </div>
+          <div class="col-span-1 md:col-span-2 flex justify-end">
+            <button onclick="testNodeLatency(${node.id})" class="px-md py-xs border border-[#27272A] text-primary rounded-md font-body-sm text-body-sm hover:bg-surface-variant transition-colors flex items-center gap-xs">
+              <span class="material-symbols-outlined text-[16px]">network_ping</span>
+              Test
+            </button>
+            <button onclick="deleteNode(${node.id})" class="px-md py-xs ml-2 border border-error/50 text-error rounded-md font-body-sm text-body-sm hover:bg-error/20 transition-colors flex items-center gap-xs">
+              <span class="material-symbols-outlined text-[16px]">delete</span>
+            </button>
+          </div>
+        `;
+        tbody.appendChild(div);
+      });
+    } catch (err) {
+      console.error("Failed to load nodes:", err);
+    }
+  }
+
+  async function testNodeLatency(nodeId) {
+    const cell = document.getElementById(`latency-cell-${nodeId}`);
+    if (cell) cell.innerHTML = `<span class="font-body-sm text-body-sm text-on-surface-variant">Testing...</span>`;
+
+    try {
+      const response = await fetch(`/api/nodes/${nodeId}/test`, { method: "POST" });
+      if (response.ok) {
+        loadNodes();
+      } else {
+        throw new Error("Test failed");
+      }
+    } catch (err) {
+      console.error("Latency test error:", err);
+      if (cell) cell.innerHTML = `<span class="text-error font-body-sm">Error</span>`;
+    }
+  }
+
+  async function deleteNode(nodeId) {
+    if (!confirm("Are you sure you want to delete this node?")) return;
+    try {
+      await fetch(`/api/nodes/${nodeId}`, { method: "DELETE" });
+      loadNodes();
+    } catch(err) { console.error(err); }
+  }
+
+  async function importSubscription(e) {
+    e.preventDefault();
+    const urlInput = document.getElementById("import-url");
+    const importBtn = document.getElementById("btn-import");
+    
+    if (!urlInput.value) {
+      alert("Please enter a URL or vless link.");
+      return;
+    }
+
+    importBtn.innerText = "Importing...";
+    importBtn.disabled = true;
+
+    const payload = {
+      name: "Imported Sub",
+      url: urlInput.value,
+      auto_update: true
+    };
+
+    try {
+      const response = await fetch("/api/subscriptions/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.detail || "Import failed");
+      }
+
+      const result = await response.json();
+      alert(`Import complete! Added: ${result.inserted}`);
+      urlInput.value = "";
+      loadNodes();
+      
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+    } finally {
+      importBtn.innerText = "Import";
+      importBtn.disabled = false;
+    }
+  }
+</script>
+</body></html>
