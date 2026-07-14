@@ -23,6 +23,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine, SessionLocal
 from routers import nodes, ports, settings
+from routers import subscriptions
+from scheduler import subscription_scheduler
 from xray_manager import process_manager
 
 logger = logging.getLogger(__name__)
@@ -73,12 +75,22 @@ async def lifespan(app: FastAPI):
             )
 
     logger.info("Xray Manager API started. Visit /docs for the Swagger UI.")
+
+    # --- Start background subscription scheduler --------------------------
+    import models as _models2
+    with SessionLocal() as _db:
+        _settings = _db.get(_models2.Settings, 1)
+        _interval = _settings.update_interval if _settings else 300
+    subscription_scheduler.start(initial_interval_seconds=_interval)
+    logger.info("Subscription scheduler started (interval=%ds).", _interval)
+
     yield
 
     # --- Shutdown ----------------------------------------------------------
     logger.info("Shutting down – stopping all Xray processes …")
     await process_manager.stop_all()
-    logger.info("All Xray processes stopped. Goodbye.")
+    subscription_scheduler.stop()
+    logger.info("Shutdown complete.")
 
 
 # ---------------------------------------------------------------------------
@@ -126,6 +138,7 @@ app.add_middleware(
 app.include_router(nodes.router)
 app.include_router(ports.router)
 app.include_router(settings.router)
+app.include_router(subscriptions.router)
 
 
 # ---------------------------------------------------------------------------

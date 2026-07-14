@@ -10,6 +10,7 @@ Defines the three core tables:
 from sqlalchemy import (
     Boolean,
     Column,
+    DateTime,
     ForeignKey,
     Integer,
     String,
@@ -116,3 +117,34 @@ class Settings(Base):
     enable_sniffing = Column(Boolean, nullable=False, default=True)
     enable_mux      = Column(Boolean, nullable=False, default=False)
     update_interval = Column(Integer, nullable=False, default=300)
+
+
+# ---------------------------------------------------------------------------
+# Subscription
+# ---------------------------------------------------------------------------
+
+class Subscription(Base):
+    """
+    Represents a remote subscription source (a URL serving a list of nodes).
+
+    Columns
+    -------
+    id           : Auto-increment primary key.
+    name         : Human-readable label for this subscription source.
+    url          : Remote URL that returns a Base64-encoded or plain-text
+                   list of proxy share links (vless://, vmess://, …).
+    last_fetched : UTC timestamp of the last successful fetch (nullable until
+                   first successful refresh).
+    node_count   : Number of nodes successfully parsed in the last fetch.
+    auto_update  : When True the background scheduler will include this
+                   subscription in its periodic refresh cycle.
+    """
+
+    __tablename__ = "subscriptions"
+
+    id           = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name         = Column(String(255), nullable=False)
+    url          = Column(String(1024), nullable=False, unique=True)
+    last_fetched = Column(DateTime, nullable=True)
+    node_count   = Column(Integer, nullable=False, default=0)
+    auto_update  = Column(Boolean, nullable=False, default=True)

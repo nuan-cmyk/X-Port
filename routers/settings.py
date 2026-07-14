@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 import models
 import schemas
 from database import get_db
+from scheduler import subscription_scheduler
 
 router = APIRouter(prefix="/api/settings", tags=["Settings"])
 
@@ -70,6 +71,12 @@ def update_settings(payload: schemas.SettingsUpdate, db: Session = Depends(get_d
     Only fields present in the request body (and not None) are written to
     the database, so the frontend can send a single changed field without
     clearing the rest.
+
+    Side-effects
+    ------------
+    If ``update_interval`` is included in the payload the background
+    subscription scheduler is immediately rescheduled to the new interval
+    without requiring a server restart.
     """
     settings = _get_or_create_settings(db)
 
@@ -80,4 +87,9 @@ def update_settings(payload: schemas.SettingsUpdate, db: Session = Depends(get_d
 
     db.commit()
     db.refresh(settings)
+
+    # Keep the scheduler in sync when the interval changes
+    if "update_interval" in update_data:
+        subscription_scheduler.reschedule(settings.update_interval)
+
     return settings

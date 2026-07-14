@@ -91,3 +91,55 @@ class SettingsResponse(SettingsBase):
     id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ===========================================================================
+# Subscription Schemas
+# ===========================================================================
+
+class SubscriptionBase(BaseModel):
+    name:        str  = Field(..., max_length=255, examples=["My VPN Sub"])
+    url:         str  = Field(..., max_length=1024, examples=["https://example.com/sub"])
+    auto_update: bool = Field(True)
+
+
+class SubscriptionCreate(SubscriptionBase):
+    """Payload accepted by POST /api/subscriptions."""
+    pass
+
+
+class SubscriptionUpdate(BaseModel):
+    """Payload accepted by PATCH /api/subscriptions/{id} (all fields optional)."""
+    name:        Optional[str]  = Field(None, max_length=255)
+    url:         Optional[str]  = Field(None, max_length=1024)
+    auto_update: Optional[bool] = None
+
+
+class SubscriptionResponse(SubscriptionBase):
+    """Full subscription representation returned in API responses."""
+    id:           int
+    last_fetched: Optional[str] = None   # ISO-8601 string; None until first fetch
+    node_count:   int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ImportResult(BaseModel):
+    """
+    Summary returned by POST /api/subscriptions after a fetch+import cycle.
+
+    Fields
+    ------
+    subscription_id : DB id of the subscription that was fetched.
+    total_parsed    : Number of vless:// URIs successfully decoded.
+    inserted        : New nodes added to the database.
+    updated         : Existing nodes whose fields were refreshed.
+    skipped         : URIs that failed to parse or were unsupported.
+    errors          : List of human-readable error messages for skipped items.
+    """
+    subscription_id: int
+    total_parsed:    int
+    inserted:        int
+    updated:         int
+    skipped:         int
+    errors:          List[str] = []
