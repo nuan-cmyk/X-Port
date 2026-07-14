@@ -597,6 +597,10 @@ def step_health_check() -> None:
 
 def _run(cmd: str | list, shell: bool = False) -> subprocess.CompletedProcess:
     """Run a shell command, exit on failure."""
+    if isinstance(cmd, str) and not shell and _is_linux():
+        import shlex
+        cmd = shlex.split(cmd)
+        
     result = subprocess.run(
         cmd, shell=shell, capture_output=True, text=True,
     )
