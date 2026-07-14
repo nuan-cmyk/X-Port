@@ -4,21 +4,33 @@ main.py – FastAPI application entry point.
 Responsibilities
 ----------------
 1. Create database tables on startup (if they don't already exist).
-2. Register the three API routers (nodes, ports, settings).
-3. Configure CORS so the React dev server can call the API.
-4. Expose a simple health-check endpoint.
+2. Reconcile port statuses: any port marked 'running' at startup (stale from a
+   previous crash) is reset to 'stopped' since no process is managing it yet.
+3. Register the three API routers (nodes, ports, settings).
+4. Configure CORS so the React dev server can call the API.
+5. Expose a simple health-check and process-status endpoint.
+6. On shutdown: gracefully stop every managed Xray child process.
 
 Run with:
     uvicorn main:app --reload --host 0.0.0.0 --port 8000
 """
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import Base, engine
+from database import Base, engine, SessionLocal
 from routers import nodes, ports, settings
+from xray_manager import process_manager
+
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
 
 
 # ---------------------------------------------------------------------------
@@ -30,13 +42,43 @@ async def lifespan(app: FastAPI):
     """
     FastAPI lifespan handler.
 
-    The `startup` block (before `yield`) runs once when the server starts.
-    The `shutdown` block (after `yield`) runs once when the server stops.
+    Startup
+    -------
+    1. Create all DB tables (no-op if they already exist).
+    2. Reset any port rows stuck in 'running' state from a previous crash
+       so the UI correctly shows them as stopped on next launch.
+
+    Shutdown
+    --------
+    Gracefully terminate every Xray child process managed by process_manager.
     """
-    # Create all tables that don't exist yet; no-ops for existing tables.
+    # --- Startup -----------------------------------------------------------
     Base.metadata.create_all(bind=engine)
+
+    # Reconcile stale 'running' status left over from a previous unclean exit
+    import models as _models
+    with SessionLocal() as db:
+        stale = (
+            db.query(_models.Port)
+            .filter(_models.Port.status == "running")
+            .all()
+        )
+        for p in stale:
+            p.status = "stopped"
+        if stale:
+            db.commit()
+            logger.info(
+                "Reset %d stale 'running' port(s) to 'stopped' on startup.",
+                len(stale),
+            )
+
+    logger.info("Xray Manager API started. Visit /docs for the Swagger UI.")
     yield
-    # Shutdown logic can go here in future steps (e.g. stop all Xray processes)
+
+    # --- Shutdown ----------------------------------------------------------
+    logger.info("Shutting down – stopping all Xray processes …")
+    await process_manager.stop_all()
+    logger.info("All Xray processes stopped. Goodbye.")
 
 
 # ---------------------------------------------------------------------------
@@ -94,3 +136,18 @@ app.include_router(settings.router)
 def health_check():
     """Returns 200 OK when the server is up and the database is reachable."""
     return {"status": "ok", "version": app.version}
+
+
+@app.get("/health/processes", tags=["Health"], summary="Active Xray process list")
+def process_status():
+    """
+    Return the PID and live-status of every Xray child process currently
+    managed by the process manager.
+
+    Response shape:
+        {
+          "<port_id>": { "pid": 12345, "running": true },
+          ...
+        }
+    """
+    return process_manager.status_summary()

@@ -3,11 +3,13 @@ routers/ports.py – CRUD + toggle endpoints for local listener ports.
 
 Endpoints
 ---------
-GET    /api/ports              → list all ports (with nested node info)
+GET    /api/ports              → list all port mappings
 POST   /api/ports              → create a new port mapping
-PUT    /api/ports/{id}/toggle  → flip the port status running ↔ stopped
-DELETE /api/ports/{id}         → remove a port mapping
+PUT    /api/ports/{id}/toggle  → start or stop the Xray process for this port
+DELETE /api/ports/{id}         → stop (if running) then remove a port mapping
 """
+
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -16,6 +18,9 @@ from typing import List
 import models
 import schemas
 from database import get_db
+from xray_manager import XrayManagerError, process_manager
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/ports", tags=["Ports"])
 
@@ -102,17 +107,36 @@ def create_port(payload: schemas.PortCreate, db: Session = Depends(get_db)):
     response_model=schemas.PortResponse,
     summary="Toggle port status (running ↔ stopped)",
 )
-def toggle_port(port_id: int, db: Session = Depends(get_db)):
+async def toggle_port(port_id: int, db: Session = Depends(get_db)):
     """
-    Flip the status of a port between 'running' and 'stopped'.
+    Start or stop the Xray process for this port.
 
-    Note: In Step 2 (process management), this endpoint will also start or
-    stop the corresponding Xray inbound process. For now it only updates the
-    persisted status flag.
+    Behaviour
+    ---------
+    - stopped → running : generates an Xray config, writes it to disk, and
+      spawns an Xray child process.  The port's status is updated to
+      'running' only after the process survives its 1-second health check.
+    - running → stopped : sends SIGTERM to the Xray process, waits up to
+      3 seconds for a clean exit (falls back to SIGKILL), removes the config
+      file, and updates the port status to 'stopped'.
+
+    Error responses
+    ---------------
+    502 Bad Gateway  – Xray binary missing or crashed on startup.
     """
     port = _get_port_or_404(port_id, db)
-    port.status = "running" if port.status == "stopped" else "stopped"
-    db.commit()
+
+    try:
+        if port.status == "stopped":
+            await process_manager.start(port_id, db)
+        else:
+            await process_manager.stop(port_id, db)
+    except XrayManagerError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=str(exc),
+        )
+
     db.refresh(port)
     return port
 
@@ -122,13 +146,21 @@ def toggle_port(port_id: int, db: Session = Depends(get_db)):
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a port mapping",
 )
-def delete_port(port_id: int, db: Session = Depends(get_db)):
+async def delete_port(port_id: int, db: Session = Depends(get_db)):
     """
-    Remove a port mapping from the database.
+    Stop the Xray process (if running) then permanently remove the port mapping.
 
-    Note: If the port is currently 'running', the caller should toggle it
-    first to stop the associated process (will be enforced in Step 2).
+    The endpoint is safe to call regardless of the current port status; it
+    will gracefully stop the process before deleting the DB row.
     """
     port = _get_port_or_404(port_id, db)
+
+    # Stop the process if it is currently running (best-effort, swallow errors)
+    if process_manager.is_running(port_id):
+        try:
+            await process_manager.stop(port_id, db=None)   # don't update status – row is being deleted
+        except XrayManagerError as exc:
+            logger.warning("Could not stop port %d before delete: %s", port_id, exc)
+
     db.delete(port)
     db.commit()
