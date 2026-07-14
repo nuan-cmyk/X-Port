@@ -92,3 +92,23 @@ def delete_node(node_id: int, db: Session = Depends(get_db)):
     node = _get_node_or_404(node_id, db)
     db.delete(node)
     db.commit()
+
+
+@router.post(
+    "/{node_id}/test",
+    response_model=schemas.NodeResponse,
+    summary="Test node latency",
+)
+def test_node_latency(node_id: int, db: Session = Depends(get_db)):
+    """
+    Simulate a latency test for a specific node and update its `latency` field.
+    """
+    import random
+    node = _get_node_or_404(node_id, db)
+    
+    # Simulate a network latency test (e.g., pinging the node's address)
+    node.latency = random.randint(15, 250)
+    
+    db.commit()
+    db.refresh(node)
+    return node

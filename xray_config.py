@@ -229,6 +229,17 @@ def generate_xray_config(
             "routeOnly":   False,
         }
 
+    api_port = 10000 + port.id
+    inbound_api: dict[str, Any] = {
+        "listen": "127.0.0.1",
+        "port": api_port,
+        "protocol": "dokodemo-door",
+        "settings": {
+            "address": "127.0.0.1"
+        },
+        "tag": "api"
+    }
+
     # --- Outbound (VLESS) ---------------------------------------------------
     user: dict[str, Any] = {
         "id":         node.uuid,
@@ -264,22 +275,34 @@ def generate_xray_config(
     outbound_block:  dict[str, Any] = {"tag": "block",   "protocol": "blackhole"}
 
     # --- Full config --------------------------------------------------------
+    routing_config = _build_routing(settings.routing_mode)
+    routing_config["rules"].insert(0, {
+        "type": "field",
+        "inboundTag": ["api"],
+        "outboundTag": "api"
+    })
+
     config: dict[str, Any] = {
         "log": {
             "loglevel": "warning",
             "access":   "",
             "error":    "",
         },
-        "inbounds":  [inbound],
+        "api": {
+            "tag": "api",
+            "services": ["StatsService"]
+        },
+        "stats": {},
+        "inbounds":  [inbound, inbound_api],
         "outbounds": [outbound_proxy, outbound_direct, outbound_block],
-        "routing":   _build_routing(settings.routing_mode),
+        "routing":   routing_config,
         "dns": {
             # Use a fast public DoH resolver as a fallback
             "servers": ["1.1.1.1", "8.8.8.8", "localhost"],
         },
         "policy": {
             "levels": {"0": {"handshakeMBS": 4, "connIdle": 300}},
-            "system": {"statsOutboundDownlink": False, "statsOutboundUplink": False},
+            "system": {"statsOutboundDownlink": True, "statsOutboundUplink": True},
         },
     }
 
