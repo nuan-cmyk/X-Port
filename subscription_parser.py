@@ -11,10 +11,15 @@ decode_subscription_content(raw_content)
     Accept raw bytes/string from a subscription URL (either Base64-encoded
     or plain-text, one URI per line) and return a list of proxy URI strings.
 
+get_subscription_headers()
+    Generate a dictionary of HTTP headers that mimic a real Android VPN client
+    app request, including randomised hardware identifiers.  Used by
+    ``fetch_subscription_raw`` on every outbound request.
+
 async fetch_subscription_raw(url)
-    Fetch the raw content of a subscription URL using httpx with a sensible
-    timeout and browser-like User-Agent.  Raises ``SubscriptionFetchError``
-    on network or HTTP errors.
+    Fetch the raw content of a subscription URL using httpx, sending the
+    client-spoofing headers from ``get_subscription_headers()``.
+    Raises ``SubscriptionFetchError`` on network or HTTP errors.
 
 async fetch_and_parse(url)
     Convenience wrapper: fetch → decode → parse.
@@ -44,7 +49,10 @@ from __future__ import annotations
 
 import base64
 import logging
+import random
 import re
+import string
+import uuid
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import parse_qs, unquote, urlparse
@@ -257,6 +265,83 @@ def decode_subscription_content(raw_content: str) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# WAF-bypass header generator
+# ---------------------------------------------------------------------------
+
+# Pool of plausible Android device models (used for X-Device-Model spoofing)
+_ANDROID_MODELS = [
+    "Xiaomi 14", "Xiaomi 13 Pro", "Redmi Note 13 Pro",
+    "Samsung Galaxy S24", "Samsung Galaxy A55",
+    "POCO F6 Pro", "OnePlus 12", "Realme GT 6",
+    "Google Pixel 8", "Google Pixel 8a",
+    "Motorola Edge 50 Pro",
+]
+
+# Pool of matching Android version strings for X-Ver-Os
+_ANDROID_VERSIONS = ["13", "14", "14", "14", "15"]
+
+# App version pool – format matching a typical VPN client UA
+_APP_VERSIONS = ["2.8.0", "2.9.1", "3.0.2", "3.1.0", "3.2.5"]
+
+
+def _random_hwid() -> str:
+    """
+    Generate a random hardware-ID string that resembles an Android device
+    fingerprint: 16 uppercase hex characters grouped as 8-4-4.
+
+    Example: ``A3F2B19C-4D7E-8A21``
+    """
+    hex_chars = string.hexdigits.upper()[:16]   # 0-9 A-F
+    seg1 = "".join(random.choices(hex_chars, k=8))
+    seg2 = "".join(random.choices(hex_chars, k=4))
+    seg3 = "".join(random.choices(hex_chars, k=4))
+    return f"{seg1}-{seg2}-{seg3}"
+
+
+def get_subscription_headers() -> dict[str, str]:
+    """
+    Build an HTTP header dict that mimics an Android VPN client application.
+
+    Every call generates fresh random values for the device-specific fields
+    (model, hardware ID, OS version) so successive requests don't share a
+    static fingerprint that WAFs can block by pattern.
+
+    Returned headers
+    ----------------
+    User-Agent        – ``<AppName>/<version> (Android <os_ver>; <model>)``
+    X-App-Version     – app semantic version extracted from the UA string
+    X-Device-Locale   – always ``RU`` (matches the target subscription locale)
+    X-Device-Os       – ``Android <version>``
+    X-Device-Model    – randomly chosen Android device model name
+    X-Hwid            – randomly generated hardware-ID token
+    X-Ver-Os          – bare Android version string
+    Connection        – ``Keep-Alive``
+    Accept-Encoding   – ``gzip, deflate``
+    Accept-Language   – ``ru-RU,en,*``
+    """
+    model_name = random.choice(_ANDROID_MODELS)
+    ver_os     = random.choice(_ANDROID_VERSIONS)
+    app_ver    = random.choice(_APP_VERSIONS)
+    hwid       = _random_hwid()
+
+    device_os  = f"Android {ver_os}"
+    ua         = f"VPNApp/{app_ver} (Android {ver_os}; {model_name})"
+
+    return {
+        "User-Agent":       ua,
+        "X-App-Version":    ua.split("/")[1].split()[0] if "/" in ua else "2.8.0",
+        "X-Device-Locale":  "RU",
+        "X-Device-Os":      device_os,
+        "X-Device-Model":   model_name,
+        "X-Hwid":           hwid,
+        "X-Ver-Os":         ver_os,
+        "Connection":       "Keep-Alive",
+        "Accept-Encoding":  "gzip, deflate",
+        "Accept-Language":  "ru-RU,en,*",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Async HTTP fetcher
 # ---------------------------------------------------------------------------
 
@@ -264,17 +349,16 @@ async def fetch_subscription_raw(url: str) -> str:
     """
     Fetch the raw body of a subscription URL.
 
-    Uses a realistic browser User-Agent to avoid bot-detection rejections
-    from some providers.  Raises ``SubscriptionFetchError`` on any failure.
+    Sends ``get_subscription_headers()`` on every request to spoof a real
+    Android VPN client and bypass basic WAF / hotlink rules used by many
+    subscription providers.  Raises ``SubscriptionFetchError`` on failure.
     """
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/124.0.0.0 Safari/537.36"
-        ),
-        "Accept": "*/*",
-    }
+    headers = get_subscription_headers()
+    logger.debug(
+        "fetch_subscription_raw: ua=%r hwid=%r",
+        headers["User-Agent"],
+        headers["X-Hwid"],
+    )
     try:
         async with httpx.AsyncClient(
             follow_redirects=True,
